@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle Financeiro - Estética/Massoterapia MEI</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <div class="container">
+        <h1>💆‍♀️ Controle Financeiro - Estética/Massoterapia MEI</h1>
+        <div class="info-box"> <strong>📋 Instruções:</strong> Preencha os valores nos campos editáveis e clique em "Calcular" para atualizar os resultados automaticamente. </div>
+        <div class="section">
+            <h2>💰 1. RECEITAS MENSAIS</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr><th>Serviço</th><th>Valor Unitário (R$)</th><th>Quantidade/Mês</th><th>Total Mensal (R$)</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Massagem Relaxante</td><td><input type="number" class="input-field currency" id="massagem_valor" value="80" step="0.01"></td><td><input type="number" class="input-field" id="massagem_qtd" value="40"></td><td class="currency" id="massagem_total">R$ 3.200,00</td></tr>
+                        <tr><td>Drenagem Linfática</td><td><input type="number" class="input-field currency" id="drenagem_valor" value="90" step="0.01"></td><td><input type="number" class="input-field" id="drenagem_qtd" value="30"></td><td class="currency" id="drenagem_total">R$ 2.700,00</td></tr>
+                        <tr><td>Limpeza de Pele</td><td><input type="number" class="input-field currency" id="limpeza_valor" value="70" step="0.01"></td><td><input type="number" class="input-field" id="limpeza_qtd" value="25"></td><td class="currency" id="limpeza_total">R$ 1.750,00</td></tr>
+                        <tr><td>Peeling</td><td><input type="number" class="input-field currency" id="peeling_valor" value="120" step="0.01"></td><td><input type="number" class="input-field" id="peeling_qtd" value="15"></td><td class="currency" id="peeling_total">R$ 1.800,00</td></tr>
+                        <tr><td>Outros Serviços</td><td><input type="number" class="input-field currency" id="outros_valor" value="100" step="0.01"></td><td><input type="number" class="input-field" id="outros_qtd" value="20"></td><td class="currency" id="outros_total">R$ 2.000,00</td></tr>
+                        <tr class="total-row"><td colspan="3"><strong>TOTAL RECEITAS MENSAIS</strong></td><td class="currency"><strong id="total_receitas">R$ 11.450,00</strong></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="section">
+            <h2>💸 2. CUSTOS FIXOS MENSAIS</h2>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Descrição</th><th>Valor (R$)</th></tr></thead>
+                    <tbody>
+                        <tr><td>Aluguel do Espaço</td><td><input type="number" class="input-field currency" id="aluguel" value="1200" step="0.01"></td></tr>
+                        <tr><td>Energia Elétrica</td><td><input type="number" class="input-field currency" id="energia" value="200" step="0.01"></td></tr>
+                        <tr><td>Água</td><td><input type="number" class="input-field currency" id="agua" value="80" step="0.01"></td></tr>
+                        <tr><td>Internet/Telefone</td><td><input type="number" class="input-field currency" id="internet" value="100" step="0.01"></td></tr>
+                        <tr><td>Seguro</td><td><input type="number" class="input-field currency" id="seguro" value="150" step="0.01"></td></tr>
+                        <tr><td>Marketing/Publicidade</td><td><input type="number" class="input-field currency" id="marketing" value="300" step="0.01"></td></tr>
+                        <tr><td>Manutenção Equipamentos</td><td><input type="number" class="input-field currency" id="manutencao" value="200" step="0.01"></td></tr>
+                        <tr><td>Outros Custos Fixos</td><td><input type="number" class="input-field currency" id="outros_fixos" value="170" step="0.01"></td></tr>
+                        <tr class="cost-row"><td><strong>TOTAL CUSTOS FIXOS</strong></td><td class="currency"><strong id="total_custos_fixos">R$ 2.400,00</strong></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="section">
+            <h2>🛒 3. CUSTOS VARIÁVEIS MENSAIS</h2>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Descrição</th><th>Valor (R$)</th></tr></thead>
+                    <tbody>
+                        <tr><td>Produtos para Massagem (óleos, cremes)</td><td><input type="number" class="input-field currency" id="produtos_massagem" value="400" step="0.01"></td></tr>
+                        <tr><td>Produtos para Estética (limpeza, peeling)</td><td><input type="number" class="input-field currency" id="produtos_estetica" value="600" step="0.01"></td></tr>
+                        <tr><td>Materiais Descartáveis</td><td><input type="number" class="input-field currency" id="descartaveis" value="250" step="0.01"></td></tr>
+                        <tr><td>Produtos de Limpeza</td><td><input type="number" class="input-field currency" id="limpeza_produtos" value="100" step="0.01"></td></tr>
+                        <tr><td>Combustível/Transporte</td><td><input type="number" class="input-field currency" id="transporte" value="200" step="0.01"></td></tr>
+                        <tr><td>Outros Custos Variáveis</td><td><input type="number" class="input-field currency" id="outros_variaveis" value="150" step="0.01"></td></tr>
+                        <tr class="cost-row"><td><strong>TOTAL CUSTOS VARIÁVEIS</strong></td><td class="currency"><strong id="total_custos_variaveis">R$ 1.700,00</strong></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="section">
+            <h2>🏛️ 4. IMPOSTOS E TAXAS (MEI)</h2>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Descrição</th><th>Valor (R$)</th></tr></thead>
+                    <tbody>
+                        <tr><td>DAS MEI (INSS + ICMS + ISS)</td><td><input type="number" class="input-field currency" id="das_mei" value="71" step="0.01"></td></tr>
+                        <tr><td>Taxa de Inscrição CRM/CFM (se aplicável)</td><td><input type="number" class="input-field currency" id="taxa_conselho" value="0" step="0.01"></td></tr>
+                        <tr><td>Outras Taxas</td><td><input type="number" class="input-field currency" id="outras_taxas" value="0" step="0.01"></td></tr>
+                        <tr class="cost-row"><td><strong>TOTAL IMPOSTOS E TAXAS</strong></td><td class="currency"><strong id="total_impostos">R$ 71,00</strong></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="warning-box"> <strong>⚠️ Importante:</strong> O valor do DAS MEI para 2025 pode ser alterado conforme legislação. Verifique o valor atualizado. </div>
+        <div class="section">
+            <h2>📊 5. RESUMO FINANCEIRO</h2>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Descrição</th><th>Valor (R$)</th><th>% da Receita</th></tr></thead>
+                    <tbody>
+                        <tr class="total-row"><td><strong>RECEITA TOTAL</strong></td><td class="currency"><strong id="resumo_receita">R$ 11.450,00</strong></td><td class="currency"><strong>100,00%</strong></td></tr>
+                        <tr><td>(-) Custos Fixos</td><td class="currency" id="resumo_custos_fixos">R$ 2.400,00</td><td class="currency" id="perc_custos_fixos">20,96%</td></tr>
+                        <tr><td>(-) Custos Variáveis</td><td class="currency" id="resumo_custos_variaveis">R$ 1.700,00</td><td class="currency" id="perc_custos_variaveis">14,85%</td></tr>
+                        <tr><td>(-) Impostos e Taxas</td><td class="currency" id="resumo_impostos">R$ 71,00</td><td class="currency" id="perc_impostos">0,62%</td></tr>
+                        <tr class="cost-row"><td><strong>TOTAL CUSTOS</strong></td><td class="currency"><strong id="total_custos">R$ 4.171,00</strong></td><td class="currency"><strong id="perc_total_custos">36,43%</strong></td></tr>
+                        <tr class="profit-row"><td><strong>LUCRO LÍQUIDO</strong></td><td class="currency"><strong id="lucro_liquido">R$ 7.279,00</strong></td><td class="currency"><strong id="perc_lucro">63,57%</strong></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="section">
+            <h2>📈 6. INDICADORES DE PERFORMANCE</h2>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Indicador</th><th>Valor</th><th>Interpretação</th></tr></thead>
+                    <tbody>
+                        <tr><td>Margem de Lucro</td><td class="currency" id="margem_lucro">63,57%</td><td>Percentual de lucro sobre receita total</td></tr>
+                        <tr><td>Ponto de Equilíbrio</td><td class="currency" id="ponto_equilibrio">R$ 4.171,00</td><td>Receita mínima para cobrir custos</td></tr>
+                        <tr><td>Ticket Médio</td><td class="currency" id="ticket_medio">R$ 87,69</td><td>Valor médio por atendimento</td></tr>
+                        <tr><td>Custo por Atendimento</td><td class="currency" id="custo_atendimento">R$ 31,93</td><td>Custo médio por serviço prestado</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <button class="calculate-btn" onclick="calcular()">🔄 Calcular Resultados</button>
+        <div class="info-box"> <strong>💡 Dicas Importantes:</strong><ul><li>Mantenha sempre uma reserva de emergência equivalente a 3-6 meses de custos fixos</li><li>Monitore mensalmente seus indicadores para identificar tendências</li><li>Considere investir em qualificação profissional para aumentar o ticket médio</li><li>Avalie periodicamente seus preços comparando com o mercado local</li><li>Mantenha registros detalhados para o controle fiscal do MEI</li></ul></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
