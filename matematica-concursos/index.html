@@ -32,6 +32,11 @@
         com distratores presos a erros clássicos.</p>
       </div>
 
+      <div class="faixa-licenca" id="faixaLicenca" hidden>
+        <span id="faixaTexto"></span>
+        <button type="button" class="link-treino" id="faixaAcao"></button>
+      </div>
+
       <article class="cartao cartao-cego" id="cartaoCego">
         <span class="olho">Ponto cego de hoje</span>
         <h2 id="cegoTopico">Sem medição ainda</h2>
@@ -60,6 +65,7 @@
 
       <h3 class="secao">Domínio por tópico</h3>
       <ul class="lista-topicos" id="listaTopicosPainel"></ul>
+      <p class="rodape-licenca" id="rodapeLicenca"></p>
     </section>
 
     <!-- ===================== TREINAR ===================== -->
@@ -158,6 +164,16 @@
         <ul class="conquistas" id="resConquistas"></ul>
       </div>
 
+      <article class="cartao cartao-oferta" id="resOferta" hidden>
+        <span class="olho">Seu diagnóstico está pronto</span>
+        <h3 id="ofertaTitulo">Agora você sabe o que está te custando a vaga</h3>
+        <p id="ofertaTexto"></p>
+        <div class="oferta-acoes">
+          <button class="btn btn-primario" id="btnOfertaVer" type="button">Ver o treino completo</button>
+          <button class="btn btn-fantasma" id="btnOfertaRadar" type="button">Abrir meu radar</button>
+        </div>
+      </article>
+
       <div class="acoes-questao">
         <button class="btn btn-fantasma" id="btnResPainel" type="button">Painel</button>
         <button class="btn btn-primario" id="btnResDeNovo" type="button">Mais 10 no ponto cego</button>
@@ -200,6 +216,44 @@
 
 <div class="flutuante" id="flutuante" aria-live="polite"></div>
 
+<!-- ===================== OFERTA / LICENÇA ===================== -->
+<div class="paywall" id="paywall" hidden>
+  <div class="paywall-caixa" role="dialog" aria-modal="true" aria-labelledby="pwTitulo">
+    <button class="paywall-fechar" id="pwFechar" type="button" aria-label="Fechar">&times;</button>
+
+    <span class="olho" id="pwOlho">Este modo faz parte do treino</span>
+    <h2 id="pwTitulo">O diagnóstico é grátis. O treino é o produto.</h2>
+    <p class="pw-linha" id="pwLinha">Você já sabe onde está perdendo ponto. Liberar o treino é o que fecha o buraco.</p>
+
+    <ul class="pw-lista">
+      <li><b id="pwQtd">1.044</b> questões de provas reais, com gabarito conferido</li>
+      <li><b>Infinitas</b> questões geradas, com o seu erro nomeado em cada alternativa</li>
+      <li><b>Ponto Cego</b> — sorteia só nos seus três piores tópicos</li>
+      <li><b>Simulado</b> cronometrado, com penalidade estilo Cebraspe</li>
+      <li><b>Radar</b> de 14 eixos e ranking dos seus erros mais frequentes</li>
+    </ul>
+
+    <div class="pw-preco">
+      <strong id="pwPreco">R$ 34,97</strong>
+      <span>pagamento único · acesso vitalício · 7 dias de garantia</span>
+    </div>
+
+    <a class="btn btn-primario pw-cta" id="pwCta" href="#" target="_blank" rel="noopener">Liberar o treino completo</a>
+
+    <form class="pw-ativar" id="pwForm">
+      <label for="pwChave">Já comprou? Cole sua chave:</label>
+      <div class="pw-campo">
+        <input id="pwChave" type="text" placeholder="PC-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false" inputmode="text">
+        <button class="btn btn-fantasma" type="submit">Ativar</button>
+      </div>
+      <input id="pwNome" type="text" placeholder="Seu nome (opcional — fica gravado na chave)" autocomplete="name">
+      <p class="pw-erro" id="pwErro" hidden></p>
+    </form>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="licenca.js"></script>
 <script src="banco.js"></script>
 <script src="motor.js"></script>
 <script src="app.js"></script>

@@ -1,0 +1,523 @@
+<title>Onde Você Perde Ponto</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<style>
+:root {
+  --papel: #EDF0EC; --papel-2: #F7F9F6; --cartao: #FFFFFF;
+  --tinta: #14181C; --tinta-2: #4B5560; --tinta-3: #7C8893;
+  --traco: #D4DAD4; --traco-forte: #B3BDB3;
+  --caneta: #1F3FD4; --caneta-2: #1730A8; --caneta-suave: #E3E8FB;
+  --marcatexto: #F2E14C;
+  --acerto: #12784F; --acerto-suave: #DCF0E5;
+  --erro: #B8342A; --erro-suave: #FAE3E0;
+  --sombra: 0 1px 2px rgba(20,24,28,.06), 0 10px 26px -14px rgba(20,24,28,.22);
+  --raio: 14px; --raio-p: 9px;
+  --display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --corpo: "IBM Plex Sans", -apple-system, "Segoe UI", Roboto, sans-serif;
+  --dados: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --papel: #0F1317; --papel-2: #151A1F; --cartao: #1A2027;
+    --tinta: #E9EDE9; --tinta-2: #A8B3BC; --tinta-3: #78848E;
+    --traco: #29313A; --traco-forte: #3C4650;
+    --caneta: #8098FF; --caneta-2: #A3B4FF; --caneta-suave: #1B2440;
+    --marcatexto: #D8C63E;
+    --acerto: #46CE92; --acerto-suave: #12301F;
+    --erro: #FF8071; --erro-suave: #331916;
+    --sombra: 0 1px 2px rgba(0,0,0,.4), 0 12px 28px -16px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"] {
+  --papel: #0F1317; --papel-2: #151A1F; --cartao: #1A2027;
+  --tinta: #E9EDE9; --tinta-2: #A8B3BC; --tinta-3: #78848E;
+  --traco: #29313A; --traco-forte: #3C4650;
+  --caneta: #8098FF; --caneta-2: #A3B4FF; --caneta-suave: #1B2440;
+  --marcatexto: #D8C63E;
+  --acerto: #46CE92; --acerto-suave: #12301F;
+  --erro: #FF8071; --erro-suave: #331916;
+  --sombra: 0 1px 2px rgba(0,0,0,.4), 0 12px 28px -16px rgba(0,0,0,.7);
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--papel); color: var(--tinta);
+  font-family: var(--corpo); font-size: 16px; line-height: 1.55;
+  -webkit-text-size-adjust: 100%;
+}
+.env { max-width: 760px; margin: 0 auto; padding: 0 16px; }
+section { padding-block: 44px; }
+section + section { border-top: 1px solid var(--traco); }
+
+.olho {
+  display: block; font-size: 10.5px; font-weight: 600; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--tinta-3); margin-bottom: 10px;
+}
+h1, h2, h3 { font-family: var(--display); letter-spacing: -.03em; line-height: 1.08; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(32px, 7.4vw, 54px); font-weight: 800; }
+h2 { font-size: clamp(25px, 5vw, 34px); font-weight: 700; margin-bottom: 14px; }
+h3 { font-size: 19px; font-weight: 700; letter-spacing: -.02em; }
+p { margin: 0 0 14px; max-width: 62ch; }
+.lede { font-size: clamp(17px, 2.4vw, 20px); color: var(--tinta-2); }
+strong { font-weight: 600; }
+.marca { background: linear-gradient(transparent 60%, var(--marcatexto) 60%); }
+
+/* hero */
+.hero { padding-top: 40px; padding-bottom: 8px; }
+.hero h1 { margin-bottom: 16px; }
+.hero .lede { margin-bottom: 24px; }
+.acoes { display: flex; flex-wrap: wrap; gap: 11px; align-items: center; }
+.btn {
+  display: inline-block; padding: 14px 24px; border-radius: 99px;
+  font-family: var(--corpo); font-size: 16px; font-weight: 600;
+  text-decoration: none; border: 1px solid transparent; cursor: pointer;
+  transition: background .15s ease, border-color .15s ease, transform .12s ease;
+}
+.btn:active { transform: translateY(1px); }
+.btn:focus-visible { outline: 2px solid var(--caneta); outline-offset: 3px; }
+.btn-1 { background: var(--caneta); color: #fff; }
+.btn-1:hover { background: var(--caneta-2); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn-1 { color: #0F1317; } }
+:root[data-theme="dark"] .btn-1 { color: #0F1317; }
+.btn-2 { background: transparent; color: var(--tinta-2); border-color: var(--traco-forte); }
+.btn-2:hover { color: var(--tinta); border-color: var(--tinta-3); }
+.nota-btn { font-size: 12.5px; color: var(--tinta-3); margin: 12px 0 0; }
+
+/* radar do hero */
+.radar-bloco {
+  margin-top: 28px; padding: 20px 18px 16px;
+  background: var(--cartao); border: 1px solid var(--traco-forte);
+  border-radius: var(--raio); box-shadow: var(--sombra);
+}
+.radar-bloco .cabeca { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 4px; }
+.radar-bloco .aviso {
+  font-family: var(--dados); font-size: 10.5px; color: var(--tinta-3);
+  padding: 2px 8px; border: 1px dashed var(--traco-forte); border-radius: 99px;
+}
+.radar-grade { display: grid; grid-template-columns: 300px 1fr; gap: 20px; align-items: center; }
+@media (max-width: 620px) { .radar-grade { grid-template-columns: 1fr; } }
+#radar { width: 100%; max-width: 300px; height: auto; margin: 0 auto; display: block; }
+.furos { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.furos li { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; font-size: 14px; }
+.furos .v { font-family: var(--dados); font-weight: 600; font-variant-numeric: tabular-nums; }
+.furos .v.mau { color: var(--erro); }
+.furos .v.bom { color: var(--acerto); }
+.furos .legenda { grid-column: 1 / -1; font-size: 12.5px; color: var(--tinta-3); margin-top: 4px; }
+
+/* cena / tensão */
+.cena {
+  padding: 18px 20px; background: var(--papel-2);
+  border-left: 3px solid var(--marcatexto); border-radius: 0 var(--raio-p) var(--raio-p) 0;
+}
+.cena p:last-child { margin-bottom: 0; }
+
+/* mecanismo: a questão de exemplo */
+.demo { background: var(--cartao); border: 1px solid var(--traco); border-radius: var(--raio); overflow: hidden; }
+.demo-enun { padding: 16px 18px; font-size: 16.5px; border-bottom: 1px solid var(--traco); }
+.demo-alts { margin: 0; padding: 12px 18px; list-style: none; display: flex; flex-direction: column; gap: 7px; }
+.demo-alts li { display: flex; align-items: center; gap: 12px; font-family: var(--dados); font-size: 15px; }
+.bolha {
+  flex: 0 0 auto; width: 30px; height: 30px; border-radius: 50%;
+  display: grid; place-items: center;
+  border: 2px solid var(--traco-forte); color: var(--tinta-3);
+  font-family: var(--dados); font-size: 12px; font-weight: 600;
+}
+.demo-alts li.errada .bolha { border-color: var(--erro); background: var(--erro); color: #fff; }
+.demo-alts li.certa .bolha { border-color: var(--acerto); color: var(--acerto); background: var(--acerto-suave); }
+.demo-alts li.errada { color: var(--erro); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .demo-alts li.errada .bolha { color: #0F1317; } }
+:root[data-theme="dark"] .demo-alts li.errada .bolha { color: #0F1317; }
+.demo-erro { margin: 0; padding: 14px 18px; background: var(--erro-suave); font-size: 14.5px; border-top: 1px solid var(--traco); }
+.demo-erro b { display: block; font-family: var(--display); font-size: 17px; font-weight: 700; margin-top: 3px; letter-spacing: -.015em; }
+
+/* comparação */
+.tabela-caixa { overflow-x: auto; border: 1px solid var(--traco); border-radius: var(--raio); }
+table { border-collapse: collapse; width: 100%; min-width: 460px; background: var(--cartao); }
+th, td { padding: 12px 14px; text-align: left; font-size: 14.5px; border-bottom: 1px solid var(--traco); vertical-align: top; }
+thead th { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--tinta-3); font-weight: 600; background: var(--papel-2); }
+tbody tr:last-child td { border-bottom: 0; }
+td.eles { color: var(--tinta-3); }
+td.nos { color: var(--tinta); font-weight: 500; }
+th:first-child, td:first-child { font-weight: 600; width: 32%; }
+
+/* listas */
+.dentro { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.dentro li { padding-left: 18px; position: relative; font-size: 15px; color: var(--tinta-2); }
+.dentro li::before { content: ""; position: absolute; left: 0; top: 9px; width: 7px; height: 7px; border-radius: 50%; background: var(--caneta); }
+.dentro b { color: var(--tinta); }
+.dentro .num { font-family: var(--dados); font-weight: 600; color: var(--tinta); }
+
+.nao { margin: 0; padding: 0; list-style: none; display: grid; gap: 9px; }
+.nao li { padding-left: 24px; position: relative; font-size: 15px; color: var(--tinta-2); }
+.nao li::before {
+  content: "×"; position: absolute; left: 0; top: -1px;
+  font-family: var(--dados); font-size: 17px; font-weight: 600; color: var(--erro);
+}
+
+/* preço */
+.preco-caixa {
+  background: var(--cartao); border: 1px solid var(--traco-forte); border-left: 5px solid var(--caneta);
+  border-radius: var(--raio); padding: 24px 22px; box-shadow: var(--sombra);
+}
+.valor { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 6px; }
+.valor strong { font-family: var(--display); font-size: clamp(42px, 9vw, 60px); font-weight: 800; letter-spacing: -.045em; line-height: 1; }
+.valor span { font-size: 13.5px; color: var(--tinta-3); }
+.ancoras { margin: 14px 0 20px; padding: 0; list-style: none; display: grid; gap: 7px; }
+.ancoras li { font-size: 14px; color: var(--tinta-2); }
+.ancoras .m { font-family: var(--dados); color: var(--tinta); }
+.garantia { margin: 16px 0 0; padding-top: 14px; border-top: 1px dashed var(--traco-forte); font-size: 13.5px; color: var(--tinta-2); }
+
+/* honestidade sobre prova social */
+.sem-prova { padding: 20px 22px; background: var(--papel-2); border: 1px dashed var(--traco-forte); border-radius: var(--raio); }
+.sem-prova p:last-child { margin-bottom: 0; }
+
+/* faq */
+details { border-bottom: 1px solid var(--traco); }
+details:first-of-type { border-top: 1px solid var(--traco); }
+summary {
+  padding: 14px 2px; cursor: pointer; font-weight: 600; font-size: 15.5px;
+  list-style: none; display: flex; justify-content: space-between; gap: 12px;
+}
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; font-family: var(--dados); color: var(--caneta); font-size: 19px; line-height: 1; }
+details[open] summary::after { content: "–"; }
+details p { padding: 0 2px 14px; margin: 0; font-size: 14.5px; color: var(--tinta-2); }
+
+footer { padding-block: 32px; font-size: 12.5px; color: var(--tinta-3); }
+footer p { max-width: 70ch; }
+
+@media (prefers-reduced-motion: reduce) { * { transition-duration: .01ms !important; } }
+</style>
+
+<div class="env">
+
+  <!-- ===================== HERO ===================== -->
+  <section class="hero">
+    <span class="olho">Matemática para concurso</span>
+    <h1>Você não perde a vaga por saber pouca matemática. Perde por não saber <span class="marca">qual</span> erro te custa a prova.</h1>
+    <p class="lede">"Matemática é meu ponto fraco" não é diagnóstico. É lamento. Este app faz 14 questões,
+      uma de cada tópico, e te devolve o mapa de onde você está sangrando ponto — com nome, número e ordem de prioridade.</p>
+
+    <div class="acoes">
+      <a class="btn btn-1" data-link="app" target="_blank" rel="noopener">Fazer o diagnóstico grátis</a>
+      <a class="btn btn-2" href="#preco">Ver o treino completo</a>
+    </div>
+    <p class="nota-btn">O diagnóstico não pede cartão, não pede e-mail e não pede cadastro. São 12 minutos.</p>
+
+    <div class="radar-bloco">
+      <div class="cabeca">
+        <span class="olho" style="margin:0">Radar de domínio</span>
+        <span class="aviso">exemplo ilustrativo</span>
+      </div>
+      <div class="radar-grade">
+        <svg id="radar" viewBox="0 0 300 300" role="img" aria-label="Radar de exemplo com 14 tópicos, mostrando dois tópicos muito abaixo da linha de corte"></svg>
+        <ul class="furos">
+          <li><span>Juros compostos</span><span class="v mau">23%</span></li>
+          <li><span>Análise combinatória</span><span class="v mau">31%</span></li>
+          <li><span>Probabilidade</span><span class="v mau">44%</span></li>
+          <li><span>Porcentagem</span><span class="v bom">78%</span></li>
+          <li><span>Regra de três</span><span class="v bom">81%</span></li>
+          <li class="legenda">A linha tracejada é a nota de corte de 70%. Tudo que está dentro dela
+            é ponto que você já perdeu — e é exatamente onde o treino passa a te colocar.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== TENSÃO ===================== -->
+  <section>
+    <span class="olho">O problema que ninguém nomeia</span>
+    <h2>A apostila de 190 páginas não sabe quem você é</h2>
+
+    <div class="cena">
+      <p>Você abre a apostila na página 1. Estuda razão e proporção — que você já sabia. Chega na página 40
+        e a sensação é boa: quarenta páginas em uma semana.</p>
+      <p>No dia da prova caem duas questões de juros compostos. Você erra as duas pelo mesmo motivo que
+        errava seis meses antes: aplicou a fórmula de juros simples num problema composto. <strong>Ninguém nunca
+        te disse que esse era o seu erro.</strong> A apostila explicou juros compostos. Explicar não é o mesmo
+        que apontar.</p>
+    </div>
+
+    <p style="margin-top:22px">É isso que um PDF não consegue fazer. Ele tem uma ordem fixa — a dele.
+      Não sabe que você domina porcentagem e sangra em combinatória, então te faz pagar o mesmo preço de
+      atenção pelos dois. <strong>O material que trata todo mundo igual é o material que serve para ninguém.</strong></p>
+  </section>
+
+  <!-- ===================== MECANISMO ===================== -->
+  <section>
+    <span class="olho">O mecanismo</span>
+    <h2>Cada alternativa errada aqui tem nome</h2>
+    <p>Num app comum, marcar a alternativa errada devolve um X vermelho. Aqui, cada distrator foi
+      construído a partir de um erro clássico de prova — então o app sabe <em>qual</em> erro você acabou de
+      cometer, e te diz.</p>
+
+    <div class="demo">
+      <p class="demo-enun">Uma mercadoria custava <strong>R$ 800,00</strong>. Em janeiro sofreu aumento de 20% e,
+        na liquidação de julho, desconto de 20% sobre o preço já aumentado. Qual o preço final?</p>
+      <ul class="demo-alts">
+        <li class="errada"><span class="bolha">A</span> R$ 800,00</li>
+        <li class="certa"><span class="bolha">B</span> R$ 768,00</li>
+        <li><span class="bolha">C</span> R$ 960,00</li>
+        <li><span class="bolha">D</span> R$ 640,00</li>
+        <li><span class="bolha">E</span> R$ 832,00</li>
+      </ul>
+      <p class="demo-erro">Marcou A? O app não diz "errado". Diz:
+        <b>Supor que aumento e desconto de mesmo percentual se cancelam</b></p>
+    </div>
+
+    <p style="margin-top:22px">Esse nome entra numa lista. Depois de 200 questões, a tela de erros te mostra:
+      <strong>"Aplicar juros simples em regime composto — 14 vezes"</strong>. Aí você não está mais estudando
+      matemática. Está consertando catorze erros específicos. <span class="marca">É outra escala de esforço
+      para o mesmo resultado.</span></p>
+  </section>
+
+  <!-- ===================== COMPARAÇÃO ===================== -->
+  <section>
+    <span class="olho">Comparação honesta</span>
+    <h2>Apostila e treinador não são a mesma categoria</h2>
+
+    <div class="tabela-caixa">
+      <table>
+        <thead>
+          <tr><th>&nbsp;</th><th>Apostila em PDF</th><th>Ponto Cego</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Formato</td><td class="eles">190 páginas para ler</td><td class="nos">App que você opera</td></tr>
+          <tr><td>Ordem do estudo</td><td class="eles">Fixa, do capítulo 1 ao 18</td><td class="nos">Definida pelo seu radar: pior tópico primeiro</td></tr>
+          <tr><td>Quando você erra</td><td class="eles">Confere o gabarito no fim</td><td class="nos">Recebe o nome do erro na hora</td></tr>
+          <tr><td>Questões</td><td class="eles">Fechadas, as mesmas sempre</td><td class="nos">1.044 de prova + geradas sem fim</td></tr>
+          <tr><td>Saber se melhorou</td><td class="eles">Sensação</td><td class="nos">Domínio por tópico, em número</td></tr>
+          <tr><td>Segunda leitura</td><td class="eles">O mesmo PDF</td><td class="nos">Questões novas, nos seus buracos atuais</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:18px; font-size:14px; color:var(--tinta-3)">Uma apostila boa é útil para aprender teoria
+      que você não sabe. Não é isso que ela deixa de fazer — é medir. São ferramentas para momentos diferentes,
+      e a maioria dos candidatos compra a primeira quando precisa da segunda.</p>
+  </section>
+
+  <!-- ===================== O QUE TEM DENTRO ===================== -->
+  <section>
+    <span class="olho">O que você recebe</span>
+    <h2>Tudo que está dentro</h2>
+    <ul class="dentro">
+      <li><span class="num">1.044</span> <b>questões de provas reais</b>, com gabarito conferido uma a uma contra a resolução</li>
+      <li><b>204 bancas e concursos</b> representados — ESAF, CESPE, Cesgranrio, BACEN, CVM, Banco do Brasil, Caixa, DETRAN, METRÔ, entre outros</li>
+      <li><b>Questões geradas sem limite</b>: os números mudam a cada rodada e a resposta é calculada, então não dá para decorar gabarito</li>
+      <li><b>Erros nomeados</b> em cada alternativa errada das questões geradas, acumulados e ranqueados por frequência</li>
+      <li><b>Modo Ponto Cego</b>: 10 questões sorteadas só nos seus três piores tópicos. Sem escolher, sem fugir</li>
+      <li><b>Simulado cronometrado</b>: 25 minutos, cartão-resposta no fim, penalidade estilo Cebraspe opcional</li>
+      <li><b>Radar de 14 eixos</b> contra a linha de corte de 70%, do primeiro diagnóstico ao último treino</li>
+      <li><b>14 tópicos</b>: números, equações e funções, razão e proporção, porcentagem, progressões, combinatória, probabilidade, conjuntos, estatística, juros simples, juros compostos, descontos, cálculo financeiro e raciocínio lógico</li>
+      <li><b>Patentes, ofensiva diária e 9 conquistas</b> — de Inscrito a Primeiro Lugar</li>
+      <li><b>Funciona no celular</b>, tema claro e escuro, e continua funcionando sem internet depois de abrir</li>
+    </ul>
+  </section>
+
+  <!-- ===================== O QUE NÃO É ===================== -->
+  <section>
+    <span class="olho">Antes de comprar</span>
+    <h2>O que isso não é</h2>
+    <p>Prefiro perder a venda agora do que o reembolso depois.</p>
+    <ul class="nao">
+      <li><strong>Não é curso.</strong> Não tem videoaula, não tem professor explicando teoria. Se você nunca viu juros compostos na vida, comece por uma aula — depois volte para treinar.</li>
+      <li><strong>Não tem grupo, não tem mentoria, não tem suporte de dúvidas de matemática.</strong></li>
+      <li><strong>Não promete aprovação.</strong> Quem promete está mentindo: aprovação depende de edital, concorrência, das outras matérias e de você.</li>
+      <li><strong>Não é apostila.</strong> Não serve para ler na fila do banco. Serve para responder questão.</li>
+      <li><strong>O progresso fica no navegador que você usou.</strong> Treinou no celular, o radar está no celular. Sincronização entre dispositivos ainda não existe.</li>
+      <li><strong>As resoluções das questões de prova vêm do material de origem</strong>, em texto corrido. São legíveis, não são diagramadas. As das questões geradas são escritas passo a passo.</li>
+    </ul>
+  </section>
+
+  <!-- ===================== PREÇO ===================== -->
+  <section id="preco">
+    <span class="olho">Preço</span>
+    <h2>Menos que uma pizza, e não acaba na segunda-feira</h2>
+
+    <div class="preco-caixa">
+      <div class="valor">
+        <strong>R$ 34,97</strong>
+        <span>pagamento único · acesso vitalício · sem assinatura</span>
+      </div>
+      <ul class="ancoras">
+        <li><span class="m">R$ 34,97</span> é uma pizza grande sem refrigerante. A pizza dura uma noite.</li>
+        <li>É <span class="m">R$ 0,03</span> por questão de prova — e as geradas não têm fim.</li>
+        <li>Taxa de inscrição de concurso federal: <span class="m">R$ 80 a R$ 250</span>. Você paga isso para
+          tentar. Isto custa um sétimo para você não chegar lá com o mesmo buraco.</li>
+      </ul>
+
+      <div class="acoes">
+        <a class="btn btn-1" data-link="checkout" target="_blank" rel="noopener">Comprar o treino completo</a>
+        <a class="btn btn-2" data-link="app" target="_blank" rel="noopener">Antes disso, fazer o diagnóstico grátis</a>
+      </div>
+
+      <p class="garantia"><strong>7 dias de garantia.</strong> Abriu, treinou, achou que não era para você?
+        Pede o reembolso e recebe de volta, sem precisar justificar. Quem vende produto que funciona
+        não tem medo dessa cláusula.</p>
+    </div>
+  </section>
+
+  <!-- ===================== PROVA SOCIAL (A VERDADE) ===================== -->
+  <section>
+    <span class="olho">Prova social</span>
+    <h2>Não vou te mostrar aprovados inventados</h2>
+    <div class="sem-prova">
+      <p>Este produto é novo. Eu não tenho, hoje, aluno aprovado para colocar aqui com foto e nome de tribunal.</p>
+      <p>Poderia ter. Meia hora de trabalho: pegar fotos de um banco de avatares aleatórios, inventar
+        "Juliana Ferreira, aprovada na Prefeitura de Campinas", escrever que ela acertou 17 de 20.
+        <strong>É o que boa parte das páginas desse mercado faz</strong> — e dá para conferir, porque as fotos
+        vêm de APIs públicas de imagem genérica.</p>
+      <p>Não faço porque a prova que eu tenho é melhor: <strong>o diagnóstico é grátis e não pede nada.</strong>
+        Faça as 14 questões e olhe o seu radar. Se o que você vir for verdadeiro sobre você, o produto se
+        provou em 12 minutos — com os seus dados, não com o depoimento de alguém que talvez não exista.</p>
+    </div>
+  </section>
+
+  <!-- ===================== FAQ ===================== -->
+  <section>
+    <span class="olho">Dúvidas</span>
+    <h2>O que costumam perguntar</h2>
+
+    <details>
+      <summary>Serve para qual concurso?</summary>
+      <p>Para qualquer um que cobre matemática e raciocínio lógico no nível de ensino médio: bancário
+        (Banco do Brasil, Caixa), fiscal, tribunais, polícias, prefeituras, INSS. O banco de questões vem
+        de provas desse perfil. Não serve para concurso que exige cálculo, álgebra linear ou matemática
+        de nível superior.</p>
+    </details>
+    <details>
+      <summary>Preciso instalar algo?</summary>
+      <p>Não. Abre no navegador do celular ou do computador. Depois de abrir a primeira vez, continua
+        funcionando sem internet.</p>
+    </details>
+    <details>
+      <summary>As questões repetem?</summary>
+      <p>As 1.044 de prova são fixas — são questões que já caíram, e o valor delas é justamente esse.
+        As geradas sorteiam números novos a cada rodada e calculam a resposta, então a mesma estrutura
+        volta com valores diferentes. Não dá para decorar gabarito.</p>
+    </details>
+    <details>
+      <summary>E se eu trocar de celular?</summary>
+      <p>Sua chave continua valendo — você ativa no aparelho novo. Mas o progresso (radar, pontos, erros)
+        fica no navegador antigo, porque ainda não existe sincronização. Se isso for decisivo para você,
+        espere a próxima versão antes de comprar.</p>
+    </details>
+    <details>
+      <summary>Quantas questões preciso fazer para ver diferença?</summary>
+      <p>O radar fica confiável a partir de umas 5 questões por tópico. Os erros nomeados começam a
+        formar padrão por volta de 100 a 150 questões respondidas — é quando a tela de erros deixa de ser
+        lista e passa a ser plano de ação.</p>
+    </details>
+    <details>
+      <summary>Como recebo depois de pagar?</summary>
+      <p>Na hora, por e-mail: o link do app e a sua chave de ativação. Você cola a chave uma vez e o
+        treino completo abre.</p>
+    </details>
+  </section>
+
+  <!-- ===================== CTA FINAL ===================== -->
+  <section>
+    <h2>Duas coisas podem acontecer nos próximos 12 minutos</h2>
+    <p class="lede">Você faz o diagnóstico e descobre que o seu problema em matemática tem nome, número e
+      ordem. Ou você fecha esta página e continua estudando na ordem que a apostila escolheu, esperando
+      que dê na mesma. <strong>Uma das duas é grátis.</strong></p>
+    <div class="acoes">
+      <a class="btn btn-1" data-link="app" target="_blank" rel="noopener">Fazer o diagnóstico grátis</a>
+      <a class="btn btn-2" data-link="checkout" target="_blank" rel="noopener">Comprar por R$ 34,97</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>Ponto Cego — app de treino de matemática para concursos públicos. Os enunciados são de provas
+      aplicadas por bancas de concurso público, identificadas em cada questão quando essa informação
+      consta na fonte. Produto de treino: não garante aprovação e não substitui o estudo de teoria.</p>
+  </footer>
+
+</div>
+
+<script>
+/* ===================================================================
+   O ÚNICO BLOCO QUE VOCÊ MEXE PARA VENDER.
+   1. app      → link do app publicado (precisa estar compartilhado)
+   2. checkout → link de checkout da Kiwify/Hotmart
+   Enquanto checkout estiver em 'CONFIGURAR', o botão de compra avisa
+   que a venda não está no ar, em vez de virar um link quebrado.
+   =================================================================== */
+var VENDAS = {
+  app: 'https://claude.ai/artifact/3iDbn3XyGtYZJA7pA6DfZK',
+  checkout: 'CONFIGURAR'
+};
+
+(function () {
+  var pronto = VENDAS.checkout && VENDAS.checkout !== 'CONFIGURAR';
+  document.querySelectorAll('[data-link="app"]').forEach(function (a) {
+    a.href = VENDAS.app;
+  });
+  document.querySelectorAll('[data-link="checkout"]').forEach(function (a) {
+    if (pronto) { a.href = VENDAS.checkout; return; }
+    a.removeAttribute('href');
+    a.textContent = 'Checkout ainda nao configurado';
+    a.style.background = 'var(--traco)';
+    a.style.color = 'var(--tinta-3)';
+    a.style.cursor = 'not-allowed';
+  });
+})();
+</script>
+
+<script>
+/* Radar de exemplo. Os valores são ilustrativos e estão declarados na página
+   como exemplo — nenhum deles é apresentado como dado de aluno real. */
+(function () {
+  var dados = [
+    ['Núm', 72], ['Eq', 64], ['R3', 81], ['%', 78], ['PA', 58], ['AC', 31],
+    ['Pr', 44], ['Cj', 69], ['Est', 66], ['JS', 62], ['JC', 23], ['Desc', 49],
+    ['Fin', 41], ['RL', 74]
+  ];
+  var svg = document.getElementById('radar');
+  if (!svg) return;
+
+  var cx = 150, cy = 150, R = 96, n = dados.length;
+  var ang = function (i) { return (Math.PI * 2 * i / n) - Math.PI / 2; };
+  var pt = function (i, r) {
+    return [cx + Math.cos(ang(i)) * r, cy + Math.sin(ang(i)) * r];
+  };
+  var poli = function (r) {
+    return dados.map(function (_, i) {
+      return pt(i, r).map(function (v) { return v.toFixed(1); }).join(',');
+    }).join(' ');
+  };
+
+  var s = '';
+  [25, 50, 75, 100].forEach(function (v) {
+    s += '<polygon points="' + poli(R * v / 100) + '" fill="none" stroke="var(--traco)" stroke-width="1"/>';
+  });
+  dados.forEach(function (_, i) {
+    var p = pt(i, R);
+    s += '<line x1="' + cx + '" y1="' + cy + '" x2="' + p[0].toFixed(1) + '" y2="' + p[1].toFixed(1) +
+         '" stroke="var(--traco)" stroke-width="1"/>';
+  });
+  s += '<polygon points="' + poli(R * 0.7) + '" fill="none" stroke="var(--marcatexto)" stroke-width="1.6" stroke-dasharray="4 3"/>';
+
+  var pts = dados.map(function (d, i) {
+    return pt(i, R * d[1] / 100).map(function (v) { return v.toFixed(1); }).join(',');
+  }).join(' ');
+  s += '<polygon points="' + pts + '" fill="var(--caneta)" fill-opacity="0.18" stroke="var(--caneta)" stroke-width="2"/>';
+
+  dados.forEach(function (d, i) {
+    var p = pt(i, R * d[1] / 100);
+    var baixo = d[1] < 70;
+    s += '<circle cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="' + (baixo ? 3.6 : 2.6) +
+         '" fill="' + (baixo ? 'var(--erro)' : 'var(--caneta)') + '"/>';
+    var r = pt(i, R + 19);
+    var cos = Math.cos(ang(i));
+    var anc = Math.abs(cos) < 0.3 ? 'middle' : (cos > 0 ? 'start' : 'end');
+    s += '<text x="' + r[0].toFixed(1) + '" y="' + (r[1] + 3).toFixed(1) + '" text-anchor="' + anc +
+         '" font-size="9.5" font-family="IBM Plex Mono, monospace" fill="var(--tinta-3)">' + d[0] + '</text>';
+  });
+
+  svg.innerHTML = s;
+})();
+</script>

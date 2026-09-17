@@ -6,8 +6,15 @@
   'use strict';
 
   const M = window.MOTOR;
+  const CFG = window.CONFIG || {};
   const CHAVE = 'pontocego.v1';
   const CORTE = 70;                 // nota de corte de referência, em %
+
+  /* Versão livre: diagnóstico, radar e erros. O visitante vê o próprio buraco
+     antes de pagar — é o diagnóstico que vende, não a promessa. */
+  const licenciado = () => !!(window.LICENCA && window.LICENCA.ativa());
+  const modoLivre = (modo) => (CFG.modosLivres || ['diagnostico']).indexOf(modo) >= 0;
+  const totalRealGeral = () => M.topicos.reduce((s, t) => s + M.totalReal(t.id), 0);
 
   /* ------------------------------------------------------------- patentes */
 
@@ -166,6 +173,7 @@
   }
 
   function iniciarSessao(modo, topicoId) {
+    if (!modoLivre(modo) && !licenciado()) return abrirPaywall(modo);
     S = {
       modo, topicoId,
       fila: montarFila(modo, topicoId),
@@ -487,12 +495,91 @@
       cl.appendChild(li);
     });
 
+    /* Oferta: entra quando o diagnóstico acabou e o treino ainda está fechado.
+       O argumento é o número que ele acabou de ver, não uma promessa. */
+    const oferta = $('resOferta');
+    const mostrar = !licenciado() && respostasDaSessao.length >= 5;
+    oferta.hidden = !mostrar;
+    if (mostrar) {
+      const abaixo = M.topicos.filter((t) => foiMedido(t.id) && dominioDe(t.id) < CORTE);
+      const pior = piores(1)[0];
+      $('ofertaTitulo').textContent = abaixo.length
+        ? abaixo.length + (abaixo.length === 1 ? ' tópico abaixo' : ' tópicos abaixo') + ' da linha de corte'
+        : 'Seu radar passou do corte em todos os eixos';
+      $('ofertaTexto').textContent = abaixo.length
+        ? 'O pior é ' + pior.nome + ', com ' + Math.round(dominioDe(pior.id)) +
+          '%. O diagnóstico acaba aqui: ' + totalRealGeral().toLocaleString('pt-BR') +
+          ' questões de prova, o modo Ponto Cego e o simulado cronometrado estão no treino completo, por ' +
+          (CFG.preco || 'R$ 34,97') + ' uma vez.'
+        : 'Daqui para frente o ganho vem de velocidade e de questão nível 3 — que é o que o treino completo sorteia.';
+    }
+
     renderTopo();
   }
 
   /* guarda o que a sessão viu, porque S é zerado ao finalizar */
   let respostasDaSessao = [];
   let dominioAntesDaSessao = {};
+
+  /* --------------------------------------------------------- oferta/licença */
+
+  function abrirPaywall() {
+    const pw = $('paywall');
+    $('pwPreco').textContent = CFG.preco || 'R$ 34,97';
+    $('pwQtd').textContent = totalRealGeral().toLocaleString('pt-BR');
+
+    const medidos = M.topicos.filter((t) => foiMedido(t.id));
+    if (medidos.length) {
+      const pior = piores(1)[0];
+      $('pwOlho').textContent = 'Você já tem o diagnóstico';
+      $('pwTitulo').textContent = 'Seu ponto cego é ' + pior.nome;
+      $('pwLinha').textContent = 'Domínio de ' + Math.round(dominioDe(pior.id)) +
+        '%. O diagnóstico mostra o buraco — o treino é o que fecha.';
+    } else {
+      $('pwOlho').textContent = 'Este modo faz parte do treino';
+      $('pwTitulo').textContent = 'O diagnóstico é grátis. O treino é o produto.';
+      $('pwLinha').textContent = 'Rode o diagnóstico primeiro: são ' + M.topicos.length +
+        ' questões e não custa nada. Decidir depois é mais barato.';
+    }
+
+    const cta = $('pwCta');
+    const link = CFG.linkCheckout;
+    if (!link || link === 'CONFIGURAR') {
+      cta.removeAttribute('href');
+      cta.textContent = 'Checkout ainda não configurado';
+    } else {
+      cta.href = link;
+      cta.textContent = 'Liberar por ' + (CFG.preco || '');
+    }
+
+    $('pwErro').hidden = true;
+    pw.hidden = false;
+  }
+
+  function fecharPaywall() {
+    $('paywall').hidden = true;
+  }
+
+  function renderFaixa() {
+    const faixa = $('faixaLicenca');
+    const txt = $('faixaTexto');
+    const acao = $('faixaAcao');
+    faixa.hidden = false;
+
+    if (licenciado()) {
+      const d = window.LICENCA.dados();
+      txt.innerHTML = 'Treino completo <strong>liberado</strong>' +
+        (d.nome ? ' — ' + escapa(d.nome) : '') + '.';
+      acao.textContent = 'ver minha chave';
+      acao.onclick = () => window.alert(
+        'Chave: ' + d.chave + '\nAtivada em ' + d.em +
+        '\n\nEla é sua. Se você compartilhar, o app abre para a outra pessoa com o seu nome no rodapé.');
+    } else {
+      txt.innerHTML = 'Você está na <strong>versão livre</strong>: diagnóstico, radar e erros nomeados.';
+      acao.textContent = 'liberar o treino completo';
+      acao.onclick = () => abrirPaywall();
+    }
+  }
 
   /* ------------------------------------------------------------------ topo */
 
@@ -558,7 +645,16 @@
       : '—';
 
     listaTopicos($('listaTopicosPainel'), true);
+    renderFaixa();
     renderTopo();
+
+    const rod = $('rodapeLicenca');
+    if (rod) {
+      const d = licenciado() ? window.LICENCA.dados() : null;
+      rod.textContent = d
+        ? 'licença ' + d.chave + ' · ativada em ' + d.em.split('-').reverse().join('/')
+        : 'versão livre · ' + totalRealGeral().toLocaleString('pt-BR') + ' questões de prova no treino completo';
+    }
   }
 
   function listaTopicos(ul, ordenar) {
@@ -590,6 +686,11 @@
     $('metaCego').textContent = E.respondidas
       ? 'Agora sorteando em: ' + alvo
       : 'Ainda sem medição — vai sortear qualquer tópico';
+
+    document.querySelectorAll('.modo').forEach((b) => {
+      const bloq = !modoLivre(b.dataset.modo) && !licenciado();
+      if (bloq) b.dataset.bloqueado = '1'; else delete b.dataset.bloqueado;
+    });
 
     const grade = $('gradeTopicos');
     grade.innerHTML = '';
@@ -767,8 +868,33 @@
       mostrarTela('painel');
     });
 
+    // oferta e licença
+    $('pwFechar').addEventListener('click', fecharPaywall);
+    $('paywall').addEventListener('click', (ev) => {
+      if (ev.target === $('paywall')) fecharPaywall();
+    });
+    $('btnOfertaVer').addEventListener('click', () => abrirPaywall());
+    $('btnOfertaRadar').addEventListener('click', () => mostrarTela('radar'));
+
+    $('pwForm').addEventListener('submit', (ev) => {
+      ev.preventDefault();
+      const r = window.LICENCA.ativar($('pwChave').value, $('pwNome').value);
+      const erro = $('pwErro');
+      if (!r.ok) {
+        erro.hidden = false;
+        erro.textContent = r.motivo + (CFG.suporte ? ' Suporte: ' + CFG.suporte : '');
+        return;
+      }
+      erro.hidden = true;
+      fecharPaywall();
+      balao('treino liberado', 'ok');
+      mostrarTela('treinar');
+    });
+
     // teclado: A–E marca, Enter confirma
     document.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Escape' && !$('paywall').hidden) { fecharPaywall(); return; }
+      if (!$('paywall').hidden) return;
       if (!S || $('tela-questao').hidden) return;
       const k = ev.key.toUpperCase();
       if ('ABCDE'.includes(k) && k.length === 1) { marcar(k); ev.preventDefault(); }

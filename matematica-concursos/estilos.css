@@ -608,3 +608,127 @@ body {
   .topo { padding: 16px 24px 13px; }
   .enunciado { font-size: 18.5px; }
 }
+
+/* ---------------- oferta e licença ---------------- */
+
+.faixa-licenca {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+  padding: 9px 13px;
+  font-size: 13px; color: var(--tinta-2);
+  background: var(--caneta-suave);
+  border-radius: var(--raio-p);
+}
+.faixa-licenca strong { color: var(--tinta); }
+
+.modo[data-bloqueado="1"] .modo-nome::after {
+  content: "no treino completo";
+  margin-left: 8px;
+  padding: 2px 8px;
+  font-family: var(--fonte-corpo); font-size: 10px; font-weight: 600;
+  letter-spacing: .08em; text-transform: uppercase;
+  vertical-align: 2px;
+  color: var(--caneta); background: var(--caneta-suave);
+  border-radius: 99px;
+}
+
+.cartao-oferta { border-left: 4px solid var(--caneta); box-shadow: var(--sombra); }
+.cartao-oferta h3 {
+  margin: 6px 0 4px;
+  font-family: var(--fonte-display); font-size: 21px; font-weight: 700;
+  letter-spacing: -.02em; line-height: 1.15; text-wrap: balance;
+}
+.cartao-oferta p { margin: 0; max-width: 54ch; font-size: 14.5px; color: var(--tinta-2); }
+.oferta-acoes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 13px; }
+
+.paywall {
+  position: fixed; inset: 0; z-index: 40;
+  display: grid; place-items: center;
+  padding: 16px;
+  background: rgba(12, 16, 20, .62);
+  backdrop-filter: blur(3px);
+  overflow-y: auto;
+}
+
+.paywall-caixa {
+  position: relative;
+  width: 100%; max-width: 430px;
+  margin: auto;
+  padding: 22px 20px 20px;
+  background: var(--cartao);
+  border: 1px solid var(--traco-forte);
+  border-radius: var(--raio);
+  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, .55);
+}
+
+.paywall-fechar {
+  position: absolute; top: 8px; right: 10px;
+  width: 32px; height: 32px;
+  background: none; border: 0; cursor: pointer;
+  font-size: 24px; line-height: 1; color: var(--tinta-3);
+}
+.paywall-fechar:hover { color: var(--tinta); }
+.paywall-fechar:focus-visible { outline: 2px solid var(--caneta); outline-offset: 2px; }
+
+.paywall-caixa h2 {
+  margin: 6px 0 6px;
+  font-family: var(--fonte-display); font-size: 25px; font-weight: 800;
+  letter-spacing: -.028em; line-height: 1.1; text-wrap: balance;
+}
+.pw-linha { margin: 0 0 14px; font-size: 14.5px; color: var(--tinta-2); }
+
+.pw-lista { margin: 0 0 16px; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 7px; }
+.pw-lista li { font-size: 14px; color: var(--tinta-2); line-height: 1.35; padding-left: 16px; position: relative; }
+.pw-lista li::before {
+  content: ""; position: absolute; left: 0; top: 8px;
+  width: 6px; height: 6px; border-radius: 50%; background: var(--caneta);
+}
+.pw-lista b { color: var(--tinta); font-family: var(--fonte-dados); font-weight: 600; }
+
+.pw-preco {
+  display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  padding: 12px 14px; margin-bottom: 13px;
+  background: var(--papel-2); border-radius: var(--raio-p);
+}
+.pw-preco strong {
+  font-family: var(--fonte-display); font-size: 31px; font-weight: 800; letter-spacing: -.03em;
+}
+.pw-preco span { font-size: 11.5px; color: var(--tinta-3); }
+
+.pw-cta { display: block; width: 100%; text-align: center; text-decoration: none; }
+
+.pw-ativar {
+  margin-top: 16px; padding-top: 15px;
+  border-top: 1px dashed var(--traco-forte);
+  display: flex; flex-direction: column; gap: 8px;
+}
+.pw-ativar label { font-size: 12.5px; font-weight: 600; color: var(--tinta-2); }
+.pw-campo { display: flex; gap: 8px; }
+.pw-ativar input {
+  flex: 1 1 auto; min-width: 0;
+  padding: 10px 12px;
+  font-family: var(--fonte-dados); font-size: 14px;
+  color: var(--tinta); background: var(--papel-2);
+  border: 1px solid var(--traco-forte); border-radius: var(--raio-p);
+}
+.pw-ativar input::placeholder { color: var(--tinta-3); }
+.pw-ativar input:focus-visible { outline: 2px solid var(--caneta); outline-offset: 1px; }
+.pw-campo .btn { flex: 0 0 auto; padding: 10px 16px; }
+.pw-erro {
+  margin: 2px 0 0; padding: 8px 11px;
+  font-size: 13px; color: var(--tinta);
+  background: var(--erro-suave); border-radius: 7px;
+}
+
+.rodape-licenca {
+  padding: 10px 16px 2px;
+  font-family: var(--fonte-dados); font-size: 10.5px; color: var(--tinta-3);
+  text-align: center;
+}
+
+/* CTA sem link: o dono ainda não configurou o checkout no config.js */
+.pw-cta:not([href]) {
+  background: var(--traco);
+  color: var(--tinta-3);
+  cursor: not-allowed;
+}
