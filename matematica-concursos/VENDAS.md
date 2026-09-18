@@ -102,7 +102,7 @@ serverless resolve, e é a evolução natural depois das primeiras 50 vendas.
 | Diagnóstico completo (14 questões) | Ponto Cego: 10 questões nos 3 piores tópicos |
 | Radar de 14 eixos | Simulado cronometrado, 25 min, penalidade Cebraspe |
 | Tela de erros nomeados | Treino por tópico, com nível progressivo |
-| Pontos, patente e ofensiva | As 1.044 questões de prova |
+| Pontos, patente e ofensiva | As 520 questões de prova |
 
 A fronteira é deliberada: **o grátis entrega o diagnóstico, o pago entrega a
 cura.** É o inverso da amostra grátis tradicional, que dá um pedaço pequeno de
@@ -131,13 +131,14 @@ o reembolso é o que mata a margem, não a conversão.
 ## Riscos declarados
 
 1. **Origem do banco de questões.** Os enunciados são de provas públicas e estão
-   creditados à banca quando a fonte informa (421 das 1.044; as outras 623
-   aparecem como "questão de concurso"). As **resoluções**, porém, são texto
-   autoral extraído do PDF de origem. Vender isso é exposição real. A saída é
-   substituir progressivamente por resolução própria — já é o padrão nas questões
-   geradas. Enquanto não trocar, o risco é seu e está registrado aqui.
+   creditados à banca quando a fonte informa (233 das 520; as outras aparecem
+   como "questão de concurso"). As **resoluções**, porém, são texto autoral
+   extraído do PDF de origem. Vender isso é exposição real, e a auditoria
+   geométrica não mudou isso — só deixou o texto mais fiel ao original, o que
+   aumenta a exposição em vez de reduzir. A saída é substituir por resolução
+   própria. Enquanto não trocar, o risco é seu e está registrado aqui.
 2. **Sem sincronização entre dispositivos.** Está declarado na página de vendas e
    no FAQ. É a reclamação de suporte mais provável.
-3. **Resoluções achatadas.** 82 das 1.044 têm layout visivelmente quebrado
-   (fração ou expoente que o PDF desenhava em duas linhas). Vale revisar essas 82
-   à mão antes de escalar tráfego.
+3. **361 questões sem resolução.** Enunciado e gabarito válidos, resolução
+   retirada porque o layout do PDF não reconstrói. Estão em `quarentena.json`
+   com o laudo de cada uma, fora do app por padrão. São a fila de reescrita.

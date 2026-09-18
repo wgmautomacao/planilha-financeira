@@ -13,5 +13,11 @@ window.CONFIG = {
 
   // Modos liberados sem licença. O diagnóstico é a isca: o visitante vê o
   // próprio radar antes de pagar.
-  modosLivres: ['diagnostico']
+  modosLivres: ['diagnostico'],
+
+  // 361 questões de prova têm enunciado e gabarito válidos, mas a resolução do
+  // PDF original não reconstrói (fração empilhada, tabela de proporção). Elas
+  // ficam FORA do app: questão sem resolução não é o que o comprador pagou.
+  // Ligue só se quiser usá-las como treino seco, ciente da ausência.
+  incluirSemResolucao: false
 };

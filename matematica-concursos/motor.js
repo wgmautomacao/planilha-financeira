@@ -959,8 +959,13 @@
     indiceReal = {};
     const bruto = global.BANCO_REAL_BRUTO;
     if (!Array.isArray(bruto)) return indiceReal;
+    const cfg = global.CONFIG || {};
     for (const q of bruto) {
       if (!porId[q.t]) continue;
+      /* rev:1 = enunciado e gabarito válidos, mas a resolução do PDF não
+         reconstrói e foi retirada. Fica fora por padrão: questão sem resolução
+         não é o que o comprador pagou. Ligável como treino seco no config. */
+      if (q.rev && !cfg.incluirSemResolucao) continue;
       (indiceReal[q.t] || (indiceReal[q.t] = [])).push(q);
     }
     return indiceReal;
