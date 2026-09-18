@@ -9,8 +9,8 @@ para ele até sumir.
 
 | Fonte | Volume | Como funciona |
 |---|---|---|
-| **Questões de prova** | 520 | Extraídas de `Matematica-1400-Questoes-Resolvidas-e-Gabaritadas.pdf`, com enunciado, 4–5 alternativas, gabarito e resolução — todas com resolução auditada linha a linha |
-| **Questões geradas** | ilimitado | 30 geradores paramétricos: sorteiam números, **calculam** a resposta e montam cada distrator a partir de um erro clássico nomeado |
+| **Questões de prova** | 583 | Extraídas de `Matematica-1400-Questoes-Resolvidas-e-Gabaritadas.pdf`, com enunciado, 4–5 alternativas, gabarito e resolução — todas com resolução auditada linha a linha |
+| **Questões geradas** | 82.983 medidas | 30 geradores paramétricos: sorteiam números, **calculam** a resposta e montam cada distrator a partir de um erro clássico nomeado |
 
 A diferença que importa está na segunda linha. Numa questão gerada, marcar a
 alternativa C não devolve "errado" — devolve *"Somar percentuais sucessivos em
@@ -45,7 +45,7 @@ vendas.html           página de vendas
 extrair_pdf_geo.py    extrator geométrico do PDF
 montar_banco.py       parser das questões + auditoria das resoluções
 gerar_chaves.py       gerador de chaves de licença
-quarentena.json       as 361 questões cuja resolução aguarda reescrita
+quarentena.json       as 395 questões cuja resolução aguarda reescrita
 ```
 
 ## Como o banco foi extraído
@@ -95,43 +95,43 @@ lixo de rodapé que antes aparecia no meio de enunciado.
 
 ## Auditoria: o que entra e o que não entra
 
-De 1.457 blocos numerados, 881 questões saem íntegras. Cada uma passa por dois
+De 1.457 blocos numerados, 978 questões saem íntegras. Cada uma passa por dois
 laudos, e **o que não passa não vai para o comprador**:
 
 | Descarte | Nº | Motivo |
 |---|---|---|
-| Sem alternativas | 270 | Exemplo resolvido da teoria, não questão |
-| Gabarito divergente da resolução | 86 | O valor da alternativa apontada não aparece na resolução |
-| Sem gabarito | 81 | Resolução não indica a letra |
+| Sem alternativas | 211 | 130 são teoria; o resto é questão partida entre página ou coluna |
+| Sem gabarito e sem valor único | 70 | Nem a letra nem o valor identificam a resposta |
+| Gabarito divergente e sem valor único | 68 | A letra lida discorda do valor e nenhuma alternativa casa sozinha |
 | Bloco curto | 63 | Numeração de fórmula |
-| Depende de figura | 38 | O gráfico não vem no texto — questão sem resposta |
-| Outros | 38 | Alternativa vazia, repetida ou gigante |
+| Depende de figura | 40 | O gráfico não vem no texto — questão sem resposta |
+| Outros | 27 | Alternativa vazia, repetida ou gigante |
 
-Das 881, o laudo de resolução aprova **520** e manda **361** para quarentena:
+Das 978, o laudo de resolução aprova **583** e manda **395** para quarentena:
 
 | Defeito na resolução | Nº |
 |---|---|
-| Denominador órfão (fração que não casou) | 191 |
-| Resto tabular | 88 |
-| Expoente possivelmente perdido | 86 |
-| Alternativa vazada na resolução | 78 |
-| Tabela de proporção desenhada com traços | 64 |
-| Enunciado de outra questão colado | 33 |
-| Resto de tabela | 26 |
-| **Expoente perdido no enunciado** | 15 |
-| Fração ainda empilhada | 9 |
+| Denominador órfão (fração que não casou) | 205 |
+| Resto tabular | 96 |
+| Expoente possivelmente perdido | 89 |
+| Alternativa vazada na resolução | 83 |
+| Tabela de proporção desenhada com traços | 69 |
+| Enunciado de outra questão colado | 38 |
+| Resto de tabela | 31 |
+| **Expoente perdido no enunciado** | 16 |
+| Fração ainda empilhada | 10 |
 
-As 15 últimas são as mais graves: enunciado sem expoente é questão errada, não
+As 16 de expoente no enunciado são as mais graves: enunciado sem expoente é questão errada, não
 resolução feia. Iam para o comprador na versão anterior.
 
-As 361 em quarentena mantêm enunciado e gabarito válidos, e estão em
+As 395 em quarentena mantêm enunciado e gabarito válidos, e estão em
 `quarentena.json` com o laudo de cada uma. No `banco.js` elas aparecem com
 `rev: 1` e **resolução vazia**, fora do app por padrão. `CONFIG.incluirSemResolucao`
 liga como treino seco.
 
 ### Por que não tentei adivinhar as frações que faltam
 
-Um juntador de frações mais agressivo recuperaria boa parte dos 191
+Um juntador de frações mais agressivo recuperaria boa parte dos 205
 denominadores órfãos. Não foi feito de propósito: fração adivinhada errado
 produz uma **fórmula incorreta que parece correta**, e isso é pior que um dígito
 solto visivelmente estranho. O critério é conservador — só casa quando o
@@ -144,6 +144,56 @@ O número da alternativa apontada tem que aparecer na resolução, comparado com
 `R$ 2.680,00` e `2.680` são o mesmo número. A checagem confirma 88% dos
 gabaritos contra 32% de uma alternativa errada de controle, e cinco resoluções
 aprovadas foram conferidas na mão, conta por conta — todas corretas.
+
+### As alternativas em duas subcolunas
+
+O material diagrama as alternativas em duas subcolunas dentro da coluna:
+
+```
+a) Quadrado perfeito    d) Primo
+b) Cubo perfeito        e) Divisível por 5
+c) Múltiplo de 7
+```
+
+A ordem de leitura é **a, d, b, e, c**. A primeira versão do parser exigia ordem
+crescente e por isso descartava 108 questões boas. Agora cada alternativa vai do
+seu marcador até o próximo marcador em posição de texto, qualquer que seja a
+letra, e depois são reordenadas.
+
+### Gabarito derivado do valor
+
+Para 30 questões a letra não estava legível na resolução ou discordava dos
+números. Nesses casos o gabarito é derivado casando o valor das alternativas com
+os números da **conclusão** da resolução, e só é aceito quando exatamente uma
+alternativa casa — evidência mais forte que ler a letra, porque a letra pode ter
+sido mal extraída e o número, não. Origem final: 948 por letra, 8 por valor,
+22 por valor corrigindo uma letra divergente.
+
+### O espaço das questões geradas
+
+Os 30 geradores foram medidos, não estimados: em **242.603 sorteios** apareceram
+**82.983 enunciados distintos**, e a contagem não saturou (Conjuntos e
+Estatística ainda crescem linearmente com a amostra). É piso medido.
+
+Distribuição por tópico — os três primeiros dominam, e os três últimos são a
+fila de trabalho:
+
+| Tópico | Variações |
+|---|---|
+| Conjuntos | 39.308 |
+| Estatística | 34.037 |
+| Probabilidade | 3.460 |
+| Números | 2.439 |
+| Regra de três | 1.200 |
+| Juros simples | 810 |
+| Porcentagem | 744 |
+| Progressões | 666 |
+| Juros compostos | 228 |
+| Combinatória | 54 |
+| Raciocínio lógico | 37 |
+
+Reproduzir a contagem está em `README` do repositório raiz; o script percorre
+`MOTOR.gerar` por tópico e conta enunciados únicos.
 
 ### Reproduzir
 
@@ -159,7 +209,7 @@ importa com ele stubado — os dois scripts já fazem isso no topo.
 
 - **O progresso fica no navegador** (`localStorage`). Sobrevive a recarregar e a
   republicar a página, mas não atravessa dispositivos.
-- **361 questões de prova estão sem resolução**, à espera de reescrita.
+- **395 questões de prova estão sem resolução**, à espera de reescrita.
 - **O nível (1 a 3) é heurístico**, por tercil de tamanho do enunciado dentro do
   tópico. Não é calibração por taxa de acerto real.
 - **Conjuntos e Estatística só têm questões geradas** — o material original não

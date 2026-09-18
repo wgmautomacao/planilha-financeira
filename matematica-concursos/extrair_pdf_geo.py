@@ -292,6 +292,9 @@ def junta_fracoes(linhas_geo):
                             continue
                         if not any(c.isdigit() or c.isalpha() for c in txt[ini:fim]):
                             continue
+                        # (A)..(E) e marcador de gabarito, nao numerador
+                        if re.fullmatch(r'\(?[A-E]\)?', txt[ini:fim].strip()):
+                            continue
                         txt = txt[:ini] + '(' + txt[ini:fim] + '/' + tok + ')' + txt[fim:]
                         usados.append((ini, fim))
                     if usados:

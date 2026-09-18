@@ -69,26 +69,55 @@ def capitulo_de(l):
 
 
 def fatia(bloco):
+    """Fatia as alternativas SEM exigir ordem crescente no texto.
+
+    O material diagrama as alternativas em duas subcolunas dentro da coluna:
+
+        a) Quadrado perfeito    d) Primo
+        b) Cubo perfeito        e) Divisivel por 5
+        c) Multiplo de 7
+
+    A ordem de leitura e a, d, b, e, c. Exigir ordem crescente descartava 108
+    questoes boas. Cada alternativa vai do seu marcador ate o PROXIMO marcador
+    em posicao de texto, qualquer que seja a letra dele; depois as alternativas
+    sao reordenadas por letra.
+    """
     ach = [(m.group(1).lower(), m.start(), m.end()) for m in MARCADOR.finditer(bloco)]
-    for i in range(len(ach)):
-        if ach[i][0] != 'a':
+    if not ach:
+        return None
+
+    # primeira ocorrencia de cada letra, da esquerda para a direita
+    vistos, marcas = set(), []
+    for letra, ini, fim in ach:
+        if letra in vistos or letra not in 'abcde':
             continue
-        seq, esp = [ach[i]], 'b'
-        for j in range(i + 1, len(ach)):
-            if ach[j][0] == esp:
-                seq.append(ach[j])
-                if esp == 'e':
-                    break
-                esp = chr(ord(esp) + 1)
-        if len(seq) < 4:
-            continue
-        enun = bloco[:seq[0][1]]
-        txts = []
-        for k, (_, ini, fim) in enumerate(seq):
-            prox = seq[k + 1][1] if k + 1 < len(seq) else None
-            txts.append(bloco[fim:prox] if prox else bloco[fim:])
-        return enun, txts
-    return None
+        vistos.add(letra)
+        marcas.append((letra, ini, fim))
+    if len(marcas) < 4:
+        return None
+    letras = [m[0] for m in marcas]
+    if letras[0] != 'a' or sorted(letras) != list('abcde')[:len(letras)]:
+        return None
+
+    ordem_texto = sorted(marcas, key=lambda m: m[1])
+    embaralhado = [m[0] for m in ordem_texto] != sorted(letras)
+
+    enun = bloco[:ordem_texto[0][1]]
+    fatias = {}
+    for k, (letra, ini, fim) in enumerate(ordem_texto):
+        prox = ordem_texto[k + 1][1] if k + 1 < len(ordem_texto) else None
+        trecho = bloco[fim:prox] if prox else bloco[fim:]
+        # em layout de subcoluna a alternativa nao quebra linha; fora dele,
+        # so a ultima precisa ser cortada (a resolucao vem depois dela)
+        if embaralhado or prox is None:
+            trecho = trecho.split('\n')[0]
+        fatias[letra] = trecho
+
+    txts = [fatias[l] for l in sorted(fatias)]
+    cauda_de = ordem_texto[-1]
+    cauda = bloco[cauda_de[2]:]
+    partes = cauda.split('\n')
+    return enun, txts, '\n'.join(partes[1:])
 
 
 RX_NUM = re.compile(r'\d{1,3}(?:\.\d{3})+(?:,\d+)?|\d+(?:,\d+)?|\d+(?:\.\d+)?')
@@ -112,6 +141,21 @@ def valores(s):
 
 def casa_valor(a, b):
     return any(abs(x - y) < 0.005 for x in a for y in b)
+
+
+def gabarito_por_valor(alts, cauda):
+    """Deriva o gabarito casando o valor da alternativa com os numeros da
+    CONCLUSAO da resolucao. Só aceita quando exatamente uma alternativa casa —
+    uma evidencia mais forte que ler a letra, porque a letra pode ter sido
+    mal extraida e o numero, nao."""
+    linhas = [l for l in cauda.split('\n') if l.strip()]
+    if not linhas:
+        return None
+    vc = valores(' '.join(linhas[-3:]))
+    if not vc:
+        return None
+    casam = [i for i, a in enumerate(alts) if valores(a) and casa_valor(valores(a), vc)]
+    return casam[0] if len(casam) == 1 else None
 
 
 # ------------------------------------------------------------------ laudo ----
@@ -197,6 +241,7 @@ def main():
 
     aprovadas, quarentena, desc = [], [], collections.Counter()
     motivos = collections.Counter()
+    origens = collections.Counter()
 
     for idx, (ini, cap) in enumerate(inicios):
         fim = inicios[idx + 1][0] if idx + 1 < len(inicios) else len(linhas)
@@ -209,11 +254,8 @@ def main():
         if not corte:
             desc['sem alternativas'] += 1
             continue
-        enun, txts = corte
-
-        partes = txts[-1].split('\n')
-        txts[-1] = partes[0]
-        cauda = '\n'.join(partes[1:]).strip()
+        enun, txts, cauda = corte
+        cauda = cauda.strip()
 
         cab = re.match(r'^\s*(\d{1,4})\s*[\.\)]\s*(\(([^)\n]{2,60})\))?\s*', enun)
         numero = cab.group(1) if cab else None
@@ -237,15 +279,22 @@ def main():
             desc['alternativas repetidas'] += 1; continue
 
         m = list(GAB_TXT.finditer(cauda)) or list(GAB.finditer(cauda))
-        if not m:
-            desc['sem gabarito'] += 1; continue
-        gi = ord(m[-1].group(1).upper()) - ord('A')
-        if gi >= len(alts):
-            desc['gabarito fora do range'] += 1; continue
+        gi = ord(m[-1].group(1).upper()) - ord('A') if m else None
+        origem = 'letra'
 
-        na, nr = valores(alts[gi]), valores(cauda)
-        if na and nr and not casa_valor(na, nr):
-            desc['gabarito divergente da resolucao'] += 1; continue
+        if gi is None or gi >= len(alts):
+            gi = gabarito_por_valor(alts, cauda)
+            if gi is None:
+                desc['sem gabarito e sem valor unico'] += 1; continue
+            origem = 'valor'
+        else:
+            na, nr = valores(alts[gi]), valores(cauda)
+            if na and nr and not casa_valor(na, nr):
+                alt = gabarito_por_valor(alts, cauda)
+                if alt is None:
+                    desc['gabarito divergente e sem valor unico'] += 1; continue
+                gi, origem = alt, 'valor-corrigido'
+        origens[origem] += 1
 
         topico = cap
         for t, rx in REFINO:
@@ -258,7 +307,7 @@ def main():
         probs = laudo_enunciado(enun) + laudo(resol, alts) \
             + [p for a in alts for p in laudo_enunciado(a)][:1]
 
-        reg = {'n': numero, 'banca': banca, 'topico': topico,
+        reg = {'n': numero, 'banca': banca, 'topico': topico, 'origem_gab': origem,
                'enunciado': enun, 'alternativas': alts, 'gabarito': gi,
                'resolucao': resol, 'problemas': probs}
 
@@ -277,6 +326,7 @@ def main():
     print("\ndescartes antes do laudo:")
     for k, v in desc.most_common():
         print(f"   {v:5d}  {k}")
+    print("\norigem do gabarito:", dict(origens))
     print("\nmotivos de quarentena:")
     for k, v in motivos.most_common():
         print(f"   {v:5d}  {k}")
